@@ -54,6 +54,20 @@ namespace PdfMerge.ViewModels
             Chapters.Sort(Chapter.CompareChaptersByPosition);
         }
 
+        public void RemoveChapter(Chapter chapter)
+        {
+            if (!Chapters.Contains(chapter))
+                return;
+
+            Chapters.Remove(chapter);
+            Chapters.Sort(Chapter.CompareChaptersByPosition);
+
+            for (int i = 0; i < Chapters.Count; i++)
+            {
+                Chapters[i].Position = i + 1;
+            }
+        }
+
         public void Export(string filename)
         {
             List<PdfDocument> docs = new List<PdfDocument>();

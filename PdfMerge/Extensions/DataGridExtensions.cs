@@ -11,7 +11,7 @@ namespace PdfMerge.Extensions
 
             T item = gridView.SelectedRows[0].DataBoundItem as T;
 
-            return null;
+            return item;
         }
     }
 }

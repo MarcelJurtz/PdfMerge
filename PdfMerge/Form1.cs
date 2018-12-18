@@ -42,13 +42,13 @@ namespace PdfMerge
             cmdUp.Click += (sender, e) =>
             {
                 ViewModel.SwapPositions(dataGridView.SelectedOrDefault<Chapter>(), -1);
-                dataGridView.Refresh();
+                ResetDataSource();
             };
 
             cmdDown.Click += (sender, e) =>
             {
                 ViewModel.SwapPositions(dataGridView.SelectedOrDefault<Chapter>(), 1);
-                dataGridView.Refresh();
+                ResetDataSource();
             };
         }
 
@@ -57,7 +57,7 @@ namespace PdfMerge
             if (ofdChapters.ShowDialog() == DialogResult.OK)
             {
                 ViewModel.AddChaptersByFileName(ofdChapters.FileNames);
-                bsFiles.DataSource = ViewModel.Chapters;
+                ResetDataSource();
             }
         }
 
@@ -76,13 +76,13 @@ namespace PdfMerge
                     }
 
                     this.Enabled = true;
+
+                    if (MessageBox.Show(EXPORT_DIALOG_CONTENT, EXPORT_DIALOG_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        Process.Start(Path.GetDirectoryName(exportDialog.FileName));
                 }
                 else
                     MessageBox.Show(EXPORT_ERROR_CONTENT, EXPORT_ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            //if (MessageBox.Show(EXPORT_DIALOG_CONTENT, EXPORT_DIALOG_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            //    Process.Start(Path.GetDirectoryName(exportDialog.FileName));
         }
 
         private void Export()
@@ -96,8 +96,8 @@ namespace PdfMerge
 
             if (chapter != null)
             {
-                ViewModel.Chapters.Remove(chapter);
-                dataGridView.Refresh();
+                ViewModel.RemoveChapter(chapter);
+                ResetDataSource();
             }
         }
 
@@ -123,7 +123,14 @@ namespace PdfMerge
         private void cmdClose_Click(object sender, EventArgs e)
         {
             ViewModel.Reset();
+            ResetDataSource();
+        }
+
+        private void ResetDataSource()
+        {
+            dataGridView.DataSource = null;
             bsFiles.DataSource = ViewModel.Chapters;
+            dataGridView.DataSource = bsFiles;
         }
     }
 }
