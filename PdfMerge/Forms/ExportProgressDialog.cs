@@ -2,20 +2,16 @@
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PdfMerge
+namespace PdfMerge.Forms
 {
-    public partial class LoadingDialog : Form
+    public partial class ExportProgressDialog : Form
     {
         public Action Worker;
 
-        public LoadingDialog(Action worker)
+        public ExportProgressDialog(Action worker)
         {
             InitializeComponent();
-
-            if (worker == null)
-                throw new ArgumentException();
-
-            Worker = worker;
+            Worker = worker ?? throw new ArgumentException();
         }
 
         protected override void OnLoad(EventArgs e)

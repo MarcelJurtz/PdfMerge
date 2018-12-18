@@ -1,6 +1,6 @@
-﻿namespace PdfMerge
+﻿namespace PdfMerge.Forms
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Erforderliche Designervariable.
@@ -64,7 +64,7 @@
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(647, 227);
             this.dataGridView.TabIndex = 4;
-            this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
+            this.dataGridView.SelectionChanged += new System.EventHandler(this.DataGridView_SelectionChanged);
             // 
             // ofdChapters
             // 
@@ -81,7 +81,7 @@
             this.cmdRemove.Size = new System.Drawing.Size(54, 54);
             this.cmdRemove.TabIndex = 5;
             this.cmdRemove.UseVisualStyleBackColor = true;
-            this.cmdRemove.Click += new System.EventHandler(this.cmdRemove_Click);
+            this.cmdRemove.Click += new System.EventHandler(this.CmdRemove_Click);
             // 
             // positionDataGridViewTextBoxColumn
             // 
@@ -122,7 +122,7 @@
             this.cmdMerge.Size = new System.Drawing.Size(54, 54);
             this.cmdMerge.TabIndex = 3;
             this.cmdMerge.UseVisualStyleBackColor = true;
-            this.cmdMerge.Click += new System.EventHandler(this.cmdMerge_Click);
+            this.cmdMerge.Click += new System.EventHandler(this.CmdMerge_Click);
             // 
             // cmdDown
             // 
@@ -159,7 +159,7 @@
             this.cmdAdd.Size = new System.Drawing.Size(54, 54);
             this.cmdAdd.TabIndex = 0;
             this.cmdAdd.UseVisualStyleBackColor = true;
-            this.cmdAdd.Click += new System.EventHandler(this.cmdAdd_Click);
+            this.cmdAdd.Click += new System.EventHandler(this.CmdAdd_Click);
             // 
             // cmdClose
             // 
@@ -172,7 +172,7 @@
             this.cmdClose.Size = new System.Drawing.Size(54, 54);
             this.cmdClose.TabIndex = 6;
             this.cmdClose.UseVisualStyleBackColor = true;
-            this.cmdClose.Click += new System.EventHandler(this.cmdClose_Click);
+            this.cmdClose.Click += new System.EventHandler(this.CmdClose_Click);
             // 
             // Form1
             // 

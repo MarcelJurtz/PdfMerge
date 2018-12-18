@@ -7,9 +7,9 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace PdfMerge
+namespace PdfMerge.Forms
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         private readonly ViewModel ViewModel;
         private string exportFilePath;
@@ -26,8 +26,7 @@ namespace PdfMerge
 
         #endregion Constants
 
-
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
 
@@ -52,56 +51,16 @@ namespace PdfMerge
             };
         }
 
-        private void cmdAdd_Click(object sender, EventArgs e)
+        private void ResetDataSource()
         {
-            if (ofdChapters.ShowDialog() == DialogResult.OK)
-            {
-                ViewModel.AddChaptersByFileName(ofdChapters.FileNames);
-                ResetDataSource();
-            }
+            dataGridView.DataSource = null;
+            bsFiles.DataSource = ViewModel.Chapters;
+            dataGridView.DataSource = bsFiles;
         }
 
-        private void cmdMerge_Click(object sender, EventArgs e)
-        {
-            if (exportDialog.ShowDialog() == DialogResult.OK)
-            {
-                exportFilePath = exportDialog.FileName;
-                if (!File.Exists(exportDialog.FileName))
-                {
-                    this.Enabled = false;
+        #region UI Event Handler
 
-                    using (var progressForm = new LoadingDialog(Export))
-                    {
-                        progressForm.ShowDialog();
-                    }
-
-                    this.Enabled = true;
-
-                    if (MessageBox.Show(EXPORT_DIALOG_CONTENT, EXPORT_DIALOG_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                        Process.Start(Path.GetDirectoryName(exportDialog.FileName));
-                }
-                else
-                    MessageBox.Show(EXPORT_ERROR_CONTENT, EXPORT_ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void Export()
-        {
-            ViewModel.Export(exportFilePath);
-        }
-
-        private void cmdRemove_Click(object sender, EventArgs e)
-        {
-            Chapter chapter = dataGridView.SelectedOrDefault<Chapter>();
-
-            if (chapter != null)
-            {
-                ViewModel.RemoveChapter(chapter);
-                ResetDataSource();
-            }
-        }
-
-        private void dataGridView_SelectionChanged(object sender, EventArgs e)
+        private void DataGridView_SelectionChanged(object sender, EventArgs e)
         {
             if (ViewModel.Chapters == null)
                 return;
@@ -120,17 +79,60 @@ namespace PdfMerge
             cmdDown.Enabled = chapter?.Position != ViewModel.Chapters.Max(c => c.Position);
         }
 
-        private void cmdClose_Click(object sender, EventArgs e)
+        #region Button Clicks
+
+        private void CmdAdd_Click(object sender, EventArgs e)
+        {
+            if (ofdChapters.ShowDialog() == DialogResult.OK)
+            {
+                ViewModel.AddChaptersByFileName(ofdChapters.FileNames);
+                ResetDataSource();
+            }
+        }
+
+        private void CmdRemove_Click(object sender, EventArgs e)
+        {
+            Chapter chapter = dataGridView.SelectedOrDefault<Chapter>();
+
+            if (chapter != null)
+            {
+                ViewModel.RemoveChapter(chapter);
+                ResetDataSource();
+            }
+        }
+
+        private void CmdMerge_Click(object sender, EventArgs e)
+        {
+            if (exportDialog.ShowDialog() == DialogResult.OK)
+            {
+                exportFilePath = exportDialog.FileName;
+                if (!File.Exists(exportDialog.FileName))
+                {
+                    this.Enabled = false;
+
+                    using (var progressForm = new ExportProgressDialog(() => { ViewModel.Export(exportFilePath); }))
+                    {
+                        progressForm.ShowDialog();
+                    }
+
+                    this.Enabled = true;
+
+                    if (MessageBox.Show(EXPORT_DIALOG_CONTENT, EXPORT_DIALOG_CAPTION, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        Process.Start(Path.GetDirectoryName(exportDialog.FileName));
+                }
+                else
+                    MessageBox.Show(EXPORT_ERROR_CONTENT, EXPORT_ERROR_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CmdClose_Click(object sender, EventArgs e)
         {
             ViewModel.Reset();
             ResetDataSource();
         }
 
-        private void ResetDataSource()
-        {
-            dataGridView.DataSource = null;
-            bsFiles.DataSource = ViewModel.Chapters;
-            dataGridView.DataSource = bsFiles;
-        }
+        #endregion Button Clicks
+
+        #endregion UI Event Handler
     }
 }

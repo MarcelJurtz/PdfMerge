@@ -1,6 +1,6 @@
-﻿namespace PdfMerge
+﻿namespace PdfMerge.Forms
 {
-    partial class LoadingDialog
+    partial class ExportProgressDialog
     {
         /// <summary>
         /// Required designer variable.
